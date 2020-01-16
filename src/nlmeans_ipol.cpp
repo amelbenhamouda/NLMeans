@@ -57,13 +57,13 @@ int main(int argc, char **argv) {
     }
 
     // variables
-    int d_w = (int) nx;
-    int d_h = (int) ny;
-    int d_c = (int) nc;
-    if (d_c == 2) {
+    int d_w = (int) nx;// width
+    int d_h = (int) ny;//heigth
+    int d_c = (int) nc;// alpha
+    if (d_c == 2) { // Gray - alpha to Gray
         d_c = 1;    // nous n'utilisons pas le canal alpha
     }
-    if (d_c > 3) {
+    if (d_c > 3) { // RGBA to RGB
         d_c = 3;    // nous n'utilisons pas le canal alpha
     }
 
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
     }
 
     // ajout bruit
-    float fSigma = atof(argv[2]);
+    float fSigma = atof(argv[2]); // atof : convert string to double
     float *noisy = new float[d_whc];
 
     for (int i = 0; i < d_c; i++) {
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
     float *denoised = new float[d_whc];
 
     for (int ii = 0; ii < d_c; ii++) {
-        fpI[ii] = &noisy[ii * d_wh];
+        fpI[ii] = &noisy[ii * d_wh]; // repartittion par canneaux de noisy et denoised si Gr -> 0 si RGB [0-wh-wh*2-wh*3]
         fpO[ii] = &denoised[ii * d_wh];
     }
 
@@ -105,9 +105,9 @@ int main(int argc, char **argv) {
 
     if (d_c == 1) {
         if (fSigma > 0.0f && fSigma <= 15.0f) {
-            win = 1;
-            bloc = 10;
-            fFiltPar = 0.4f;
+            win = 1;  // win -> comp patch -> taille de f
+            bloc = 10; // bloc  -> Res. Block -> taille de r
+            fFiltPar = 0.4f; // -> parametre h
         } 
         else if (fSigma > 15.0f && fSigma <= 30.0f) {
             win = 2;
@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
             exit(-1);
         }
     }
-
+   //nlmeans_ipol(f,r,sigma,k, Input, Output , nbcanneaux(Gr ou RGB),width,heigth)
     nlmeans_ipol(win, bloc, fSigma, fFiltPar, fpI,  fpO, d_c, d_w, d_h); // fonction dans libdenoising.cpp
 
     // save noisy and denoised images

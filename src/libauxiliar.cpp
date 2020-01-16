@@ -67,6 +67,7 @@ float fiL2FloatDist(float **u0, float **u1, int i0, int j0, int i1, int j1, int 
 }
 
 void fiAddNoise(float *u, float *v, float std, long int randinit, int size) {
+    //std : standart deviation
     mt_init_genrand((unsigned long int) time (NULL) + (unsigned long int) getpid() + (unsigned long int) randinit);
     for (int i = 0; i < size; i++) {
         double a = mt_genrand_res53();
