@@ -46,7 +46,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
     int iwxh = iWidth * iHeight;
     //  length of comparison window
     int ihwl = 2 * iDWin + 1;
-    int iwl = (2 * iDWin + 1) * (2 * iDWin + 1); //(2f+1)(2f+1)
+    int iwl = (2 * iDWin + 1) * (2 * iDWin + 1);
     int icwl = iChannels * iwl;
     // filtering parameter
     float fSigma2 = fSigma * fSigma;
@@ -55,13 +55,8 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
     // multiply by size of patch, since distances are not normalized
     fH2 *= (float) icwl;
     // tabulate exp(-x), faster than using directly function expf
-    ///// LUT tables
-    // #define LUTMAX 30.0
-    // #define LUTMAXM1 29.0
-    // #define LUTPRECISION 1000.0
     int iLutLength = (int) rintf((float) LUTMAX * (float) LUTPRECISION);
-    //rintf round UPWARD or DOWNWARD if set FE_DOWWARD respc and by default round to the nearest int
-    float *fpLut = new float[iLutLength]; // création lookup table
+    float *fpLut = new float[iLutLength];
     wxFillExpLut(fpLut, iLutLength);
     // auxiliary variable
     // number of denoised values per pixel
@@ -69,7 +64,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
     fpClear(fpCount, 0.0f, iwxh);
     // clear output
     for (int ii = 0; ii < iChannels; ii++) {
-        fpClear(fpO[ii], 0.0f, iwxh);  //Output mis à 0
+        fpClear(fpO[ii], 0.0f, iwxh);
     }
     // PROCESS STARTS
     // for each pixel (x,y)
@@ -93,13 +88,13 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
                 int jmax = MIN(y + iDBloc, iHeight - 1 - iDWin0);
                 //  clear current denoised patch
                 for (int ii = 0; ii < iChannels; ii++) {
-                    fpClear(fpODenoised[ii], 0.0f, iwl); //iwl longueur de block (2f+1)(2f+1)
+                    fpClear(fpODenoised[ii], 0.0f, iwl);
                 }
                 // maximum of weights. Used for reference patch
                 float fMaxWeight = 0.0f;
                 // sum of weights
                 float fTotalWeight = 0.0f;
-                for (int j = jmin; j <= jmax; j++) { // p(x,y)  q(i,j)
+                for (int j = jmin; j <= jmax; j++) {
                     for (int i = imin; i <= imax; i++) {
                         if (i != x || j != y) {
                             float fDif = fiL2FloatDist(fpI, fpI, x, y, i, j, iDWin0, iChannels, iWidth, iWidth);
@@ -124,7 +119,7 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
                             }
                         }
                     }
-                } //fin calcule C=sum(weigth)
+                }
                 // current patch with fMaxWeight
                 for (int is = -iDWin0; is <= iDWin0; is++) {
                     int aiindex = (iDWin + is) * ihwl + iDWin;
@@ -163,12 +158,12 @@ void nlmeans_ipol(int iDWin,            // Half size of patch
     for (int ii = 0; ii < iwxh; ii++) {
         if (fpCount[ii] > 0.0) {
             for (int jj = 0; jj < iChannels; jj++)  {
-                fpO[jj][ii] /= fpCount[ii]; //moyenne sur le pixel
+                fpO[jj][ii] /= fpCount[ii];
             }
         }       
         else {
             for (int jj = 0; jj < iChannels; jj++)  {
-                fpO[jj][ii] = fpI[jj][ii]; // si  0 modif valeur de l'input
+                fpO[jj][ii] = fpI[jj][ii];
             }
         }
     }
