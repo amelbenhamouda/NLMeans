@@ -1,0 +1,76 @@
+##################### ONDELETTE #####################
+####### Théorie:
+Les ondelettes ("wavelets") sont un codage en sous bande d’une image consistant à extraire les caractéristiques d’une image sur plusieurs niveaux d’échelle. 
+Le principe est de décomposer l’image en haute et basse fréquence en sous samplant les résultats de filtre passe-haut et passe-bas. Cette transformation est unitaire et repose sur la décomposition de base orthonormale.
+La transformée en ondelettes préserve l’énergie du signal.
+
+PARLER DES SEUILLAGE
+
+####### Résultat:
+
+####### Critique:
+-> positif :
+	- algorithme rapide car complexite Nlog(N)
+	- coeff tres representatif lors des mesures physique
+
+-> negatif :
+	- La transformée en ondelettes n’est pas invariante par translation.
+	- Perd de l’information haute fréquence ce qui a pour conséquence de "flouter" l’image car on perd des détails. 
+	- Pas forcément le plus adapté car il fait apparaître des artefacts avec un seuil dur. 
+
+##################### NLMEANS #####################
+####### Théorie:
+Le but est de chercher dans l’image pour un pixel donnée un patch au minimum de 9 pixels ressemblant à ce pixel et d’appliquer une moyenne de ce patch au niveau du pixel donné. Si 9 pixels sont moyennés alors la variance du bruit est environ divisée par 3. Le patch n’étant pas forcément voisin direct du pixel. Il faut alors regarder une plus grande portion de l’image et regarder par exemple les patterns périodiques, les élongations (lignes). Le but est alors de créer un filtre moyen non local.
+
+Cette méthode peut-être implémenté soit en niveau de pixel ou bien niveau de patch.
+
+PARLER DU NIVEAU QUI A ETAIT IMPLEMENTER SUR NOTEBOOK
+
+####### Résultat:
+
+####### Critique:
+-> positif :
+	- proche du bruit blanc, 
+	- travaille de non local permet d’avoir un meilleur moyennage
+	- pas d’artefacts dans l’image débruitée
+	
+-> negatif :
+	- complexité des NLMeans est très importante, elle est quadratique
+
+##################### CONCLUSION #####################
+Avantage Ondelette:
+	- basse compléxité Nlog(N)
+	- preserve l'energie du resultat du débruitage
+
+Avantage NLMeans :
+	- meilleur SNR
+	- meilleur reconstruction visuelle
+	- meilleur correction du  bruit en non local car rapproche bruit blanc
+
+Inconvénient Ondelette :
+	- mauvais SNR
+	- mauvaise reconstruction visuelle
+
+Inconvenient NLMeans :
+	- complexité qui est quadratique (en N²) mais stratégie existe
+	
+UTILISATION:
+-> Pour beaucoup de données : Ondelette
+-> Pour resultat plus précis sur une image : NLMeans
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
